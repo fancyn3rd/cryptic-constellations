@@ -24,24 +24,32 @@ const MAX_STARS = 12
 const MIN_STARS = 5
 const MIN_MOUSETRACK = 10
 const MAX_MOUSETRACK = 40
+const MIN_AXIS_DIFFERENCE = 50
 
 let mousetrackToNextStar
 let constellationStarCount
+let oldMousePos = []
 
 document.body.addEventListener("mousemove", (event) => onMouseMove(event))
-document.body.addEventListener("contextmenu", () => resetCanvas())
+document.body.addEventListener("click", (event) => resetCanvas(event))
+
 setMouseTrackToNextStar()
 setConstellationStarCount()
+
+function storeMousePos(mouse) {
+  oldMousePos = {x: mouse.x, y: mouse.y}
+}
 
 function setConstellationStarCount() {
   constellationStarCount = randomRange(MIN_STARS, MAX_STARS)
 }
 
-function resetCanvas() {
+function resetCanvas(event) {
   stars = []
   container.removeChildren()
   isDone = false
   mouseTrack = 0
+  storeMousePos(event)
 }
 
 
@@ -54,23 +62,30 @@ function onMouseMove(mouseEvent) {
   mouseTrack += 1
   if (mouseTrack > mousetrackToNextStar) {
 
-    if (stars.length === constellationStarCount) {
-      connectStars()
-      stars = []
-      isDone = true
+    if (isMousePosDifferent("x", mouseEvent, MIN_AXIS_DIFFERENCE) &&
+      isMousePosDifferent("y", mouseEvent, MIN_AXIS_DIFFERENCE)) {
+      oldMousePos.x = mouseEvent.x
+      oldMousePos.y = mouseEvent.y
+
+        if (stars.length === constellationStarCount) {
+        connectStars()
+        stars = []
+        isDone = true
+      }
+
+      if (!isDone) {
+        createStarPosition(mouseEvent)
+        setMouseTrackToNextStar()
+        mouseTrack = 0
+      }
     }
-
-    if (!isDone) {
-      createStarPosition(mouseEvent)
-      setMouseTrackToNextStar()
-      mouseTrack = 0
-
-    }
-
   }
 }
 
-
+function isMousePosDifferent(axis, currentMouse, minDifference) {
+  return currentMouse[axis] > oldMousePos[axis] + minDifference ||
+    currentMouse[axis] < oldMousePos[axis] - minDifference
+}
 
 
 //*******************************************************************************************
@@ -112,7 +127,6 @@ async function connectStars() {
   for (var i = 0; i < MAX_STARS; i++) {
     drawLine(stars[i], stars[i + 1])
   }
-  drawLine(stars[randomRange(0, stars.length - 1)], stars[randomRange(0, stars.length - 1)])
   drawLine(stars[randomRange(0, stars.length - 1)], stars[randomRange(0, stars.length - 1)])
 }
 
