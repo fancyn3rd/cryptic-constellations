@@ -20,11 +20,11 @@ let mouseTrack = 0
 let stars = []
 let isDone = false
 
-const MAX_STARS = 12
-const MIN_STARS = 5
+const MAX_STARS = 10
+const MIN_STARS = 4
 const MIN_MOUSETRACK = 10
 const MAX_MOUSETRACK = 40
-const MIN_AXIS_DIFFERENCE = 50
+const MIN_AXIS_DIFFERENCE = 20
 
 let mousetrackToNextStar
 let constellationStarCount
