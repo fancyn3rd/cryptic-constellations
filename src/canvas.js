@@ -30,6 +30,8 @@ let mousetrackToNextStar
 let constellationStarCount
 let oldMousePos = []
 
+console.log(app.renderer)
+
 document.body.addEventListener("mousemove", (event) => onMouseMove(event))
 document.body.addEventListener("click", (event) => resetCanvas(event))
 
@@ -101,14 +103,14 @@ const styles = {
   star: {
     line: {
       weight: 1,
-      color:  PIXI.utils.string2hex("#ffffff")
+      color:  "0xffffff"
     },
-    color:  PIXI.utils.string2hex("#ffffff"),
+    color:  "0xffffff",
     size: 5
   },
   line: {
     weight: 2,
-    color:  PIXI.utils.string2hex("#ffffff")
+    color:  "0xffffff"
   }
 }
 
