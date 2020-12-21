@@ -29,7 +29,7 @@ let mousetrackToNextStar
 let constellationStarCount
 
 document.body.addEventListener("mousemove", (event) => onMouseMove(event))
-document.body.addEventListener("click", () => resetCanvas())
+document.body.addEventListener("contextmenu", () => resetCanvas())
 setMouseTrackToNextStar()
 setConstellationStarCount()
 
