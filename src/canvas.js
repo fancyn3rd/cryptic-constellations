@@ -12,6 +12,13 @@ const app = new PIXI.Application(
   }
 );
 
+const colors = [
+  "0xffffff",
+  "0x71fff1",
+  "0xb6fffd",
+  "0x8ad3ff"
+]
+
 PIXI.settings.SORTABLE_CHILDREN = true
 
 document.body.appendChild(app.view);
@@ -78,11 +85,10 @@ function onMouseMove(mouseEvent) {
         if (stars.length === constellationStarCount) {
         connectStars()
 
-        for (var i = 0; i < starContainer.children.length - 1; i++) {
-          console.log("starContainer.children[i]")
-          starContainer.children[i].tint = Math.random() * 0xFFFFFF;
-          lineContainer.children[i].tint = Math.random() * 0xFFFFFF;
-        }
+        const rndColor = colors[randomRange(0, colors.length - 1)]
+
+        tintChilds(starContainer, rndColor)
+        tintChilds(lineContainer, rndColor)
 
         stars = []
         isDone = true
@@ -96,6 +102,12 @@ function onMouseMove(mouseEvent) {
         mouseTrack = 0
       }
     }
+  }
+}
+
+function tintChilds(parent, color) {
+  for (var i = 0; i < parent.children.length; i++) {
+    parent.children[i].tint = color
   }
 }
 
@@ -125,14 +137,14 @@ const styles = {
   star: {
     line: {
       weight: 1,
-      color:  "0xffffff"
+      color:  colors[0]
     },
-    color:  "0xffffff",
+    color:  colors[0],
     size: 5
   },
   line: {
     weight: 2,
-    color:  "0xffffff"
+    color:  colors[0]
   }
 }
 
@@ -158,10 +170,11 @@ function drawStar(mouseEvent) {
   stars.push(star)
 }
 
-async function connectStars() {
+function connectStars() {
   for (var i = 0; i < MAX_STARS; i++) {
     drawLine(stars[i], stars[i + 1])
   }
+  drawLine(stars[randomRange(0, stars.length - 1)], stars[randomRange(0, stars.length - 1)])
   drawLine(stars[randomRange(0, stars.length - 1)], stars[randomRange(0, stars.length - 1)])
 }
 
