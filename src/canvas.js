@@ -172,7 +172,7 @@ function drawStar(mouseEvent) {
   const star = new PIXI.Graphics();
   star.lineStyle(styles.star.line.weight, styles.star.line.color, 1);
   star.beginFill(styles.star.color, 1);
-  star.drawStar(0, 0, randomRange(5, 20), randomRange(2, 7))
+  star.drawStar(0, 0, randomRange(3, 10), randomRange(2, 8))
   star.position.set(mouseEvent.x, mouseEvent.y)
   star.endFill();
   starContainer.addChild(star);
