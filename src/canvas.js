@@ -16,7 +16,16 @@ const colors = [
   "0xffffff",
   "0x71fff1",
   "0xb6fffd",
-  "0x8ad3ff"
+  "0x8ad3ff",
+  "0xff7d00",
+  "0xffd23f",
+  "0x3bceac",
+  "0xd7f75b",
+  "0xfb710b",
+  "0xbf74a0",
+  "0x8afed6",
+  "0x36f219",
+  "0xee2e31",
 ]
 
 PIXI.settings.SORTABLE_CHILDREN = true
