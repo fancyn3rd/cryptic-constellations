@@ -37,14 +37,15 @@ app.stage.addChild(starContainer);
 
 const style = new PIXI.TextStyle({
   fill: colors[0],
-  fontSize: 30,
+  fontSize: 36,
   fontFamily: "Verdana",
+  fontStyle: 'italic',
   align: "center",
   wordWrap: true,
   wordWrapWidth: 350
 });
 
-const text = new PIXI.Text('Click and move mouse to find a constellation', style);
+const text = new PIXI.Text('Use m0use to f1nd a const3llation', style);
 text.pivot.x = text.width / 2
 text.pivot.y = text.height / 2
 text.x = app.screen.width/2
@@ -102,6 +103,7 @@ function resetCanvas(event) {
   lineContainer.rotation = 0
   mouseTrack = 0
   storeMousePos(event)
+  tintChilds(backgroundContainer, colors[0])
 }
 
 
@@ -191,7 +193,7 @@ for (var i=0; i<1000; i++) {
   star.lineStyle(styles.star.line.weight, styles.star.line.color, 1);
   star.beginFill(styles.star.color, 1);
   star.drawRect(0, 0, 0.1, 0.1)
-  star.lineStyle(styles.star.line.weight, colors[randomRange(0, colors.length- 1)], 1);
+  star.lineStyle(styles.star.line.weight, colors[0], 1);
   star.drawRect(1, 1, 0.1, 0.1)
   star.position.set(randomRange(0, app.screen.width), randomRange(0, app.screen.height))
   star.endFill();
@@ -262,6 +264,10 @@ app.ticker.add((delta) => {
   if (isDone) {
     starContainer.rotation += 0.005 * delta;
     lineContainer.rotation += 0.005 * delta;
+
+    const rndColor = colors[randomRange(0, colors.length - 1)]
+
+        tintChilds(backgroundContainer, rndColor)
   }
 });
 
