@@ -50,6 +50,7 @@ function resetCanvas(event) {
   stars = []
   container.removeChildren()
   isDone = false
+  container.rotation = 0
   mouseTrack = 0
   storeMousePos(event)
 }
