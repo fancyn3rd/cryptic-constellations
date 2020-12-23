@@ -3,6 +3,7 @@ import * as PIXI from "pixi.js";
 
 const starContainer = new PIXI.Container()
 const lineContainer = new PIXI.Container()
+const backgroundContainer = new PIXI.Container()
 
 const app = new PIXI.Application(
   800,
@@ -28,12 +29,10 @@ const colors = [
   "0xee2e31",
 ]
 
-PIXI.settings.SORTABLE_CHILDREN = true
-
 document.body.appendChild(app.view);
 
+app.stage.addChild(backgroundContainer)
 app.stage.addChild(lineContainer);
-
 app.stage.addChild(starContainer);
 
 const style = new PIXI.TextStyle({
@@ -51,6 +50,9 @@ text.pivot.y = text.height / 2
 text.x = app.screen.width/2
 text.y = app.screen.height/2 - 20
 app.stage.addChild(text);
+
+
+
 
 
 let mouseTrack = 0
@@ -184,6 +186,19 @@ const styles = {
   }
 }
 
+for (var i=0; i<1000; i++) {
+  const star = new PIXI.Graphics();
+  star.lineStyle(styles.star.line.weight, styles.star.line.color, 1);
+  star.beginFill(styles.star.color, 1);
+  star.drawRect(0, 0, 0.1, 0.1)
+  star.lineStyle(styles.star.line.weight, colors[randomRange(0, colors.length- 1)], 1);
+  star.drawRect(1, 1, 0.1, 0.1)
+  star.position.set(randomRange(0, app.screen.width), randomRange(0, app.screen.height))
+  star.endFill();
+  backgroundContainer.addChild(star);
+
+}
+
 function drawCircle(mouseEvent) {
   const star = new PIXI.Graphics();
   star.lineStyle(styles.star.line.weight, styles.star.line.color, 1);
@@ -241,12 +256,12 @@ lineContainer.y = app.screen.height / 2;
 lineContainer.pivot.x = app.screen.width / 2
 lineContainer.pivot.y = app.screen.height / 2
 
-const rotationSpeed = 0.003
+const rotationSpeed = 0.005
 
 app.ticker.add((delta) => {
   if (isDone) {
-    starContainer.rotation += rotationSpeed * delta;
-    lineContainer.rotation += rotationSpeed * delta;
+    starContainer.rotation += 0.005 * delta;
+    lineContainer.rotation += 0.005 * delta;
   }
 });
 
