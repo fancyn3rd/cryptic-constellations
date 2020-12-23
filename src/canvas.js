@@ -146,4 +146,17 @@ function randomRange(min, max) {
   return Math.ceil(Math.random() * (max - min) + min)
 }
 
+container.x = app.screen.width / 2;
+container.y = app.screen.height / 2;
+
+container.pivot.x = app.screen.width / 2
+container.pivot.y = app.screen.height / 2
+
+
+
+app.ticker.add((delta) => {
+  if (isDone) {
+    container.rotation += 0.01 * delta;
+  }
+});
 
