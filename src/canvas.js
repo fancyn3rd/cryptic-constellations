@@ -57,6 +57,7 @@ let mouseTrack = 0
 
 let stars = []
 let isDone = true
+let almostDone = true
 
 const MAX_STARS = 10
 const MIN_STARS = 4
@@ -94,6 +95,7 @@ function resetCanvas(event) {
   starContainer.removeChildren()
   lineContainer.removeChildren()
   isDone = false
+  almostDone = false
   starContainer.rotation = 0
   lineContainer.rotation = 0
   mouseTrack = 0
@@ -124,12 +126,13 @@ function onMouseMove(mouseEvent) {
         tintChilds(lineContainer, rndColor)
 
         stars = []
-        isDone = true
+        almostDone = true
+        setTimeout(() => isDone = true, 1000)
 
         
       }
 
-      if (!isDone) {
+      if (!almostDone) {
         createStarPosition(mouseEvent)
         setMouseTrackToNextStar()
         mouseTrack = 0
