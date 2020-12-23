@@ -36,10 +36,27 @@ app.stage.addChild(lineContainer);
 
 app.stage.addChild(starContainer);
 
+const style = new PIXI.TextStyle({
+  fill: colors[0],
+  fontSize: 30,
+  fontFamily: "Verdana",
+  align: "center",
+  wordWrap: true,
+  wordWrapWidth: 350
+});
+
+const text = new PIXI.Text('Click and move mouse to find a constellation', style);
+text.pivot.x = text.width / 2
+text.pivot.y = text.height / 2
+text.x = app.screen.width/2
+text.y = app.screen.height/2 - 20
+app.stage.addChild(text);
+
+
 let mouseTrack = 0
 
 let stars = []
-let isDone = false
+let isDone = true
 
 const MAX_STARS = 10
 const MIN_STARS = 4
@@ -52,7 +69,7 @@ let constellationStarCount
 let oldMousePos = []
 
 document.body.addEventListener("mousemove", (event) => onMouseMove(event))
-document.body.addEventListener("click", (event) => resetCanvas(event))
+document.body.addEventListener("click", (event) => onClick(event))
 
 setMouseTrackToNextStar()
 setConstellationStarCount()
@@ -65,7 +82,14 @@ function setConstellationStarCount() {
   constellationStarCount = randomRange(MIN_STARS, MAX_STARS)
 }
 
+function onClick(event) {
+  if (isDone) {
+    resetCanvas(event)
+  }
+}
+
 function resetCanvas(event) {
+  text.visible = false
   stars = []
   starContainer.removeChildren()
   lineContainer.removeChildren()
