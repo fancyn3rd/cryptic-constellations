@@ -214,12 +214,12 @@ lineContainer.y = app.screen.height / 2;
 lineContainer.pivot.x = app.screen.width / 2
 lineContainer.pivot.y = app.screen.height / 2
 
-
+const rotationSpeed = 0.003
 
 app.ticker.add((delta) => {
   if (isDone) {
-    starContainer.rotation += 0.01 * delta;
-    lineContainer.rotation += 0.01 * delta;
+    starContainer.rotation += rotationSpeed * delta;
+    lineContainer.rotation += rotationSpeed * delta;
   }
 });
 
