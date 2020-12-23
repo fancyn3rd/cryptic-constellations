@@ -30,8 +30,6 @@ let mousetrackToNextStar
 let constellationStarCount
 let oldMousePos = []
 
-console.log(app.renderer)
-
 document.body.addEventListener("mousemove", (event) => onMouseMove(event))
 document.body.addEventListener("click", (event) => resetCanvas(event))
 
@@ -94,11 +92,18 @@ function isMousePosDifferent(axis, currentMouse, minDifference) {
 //*******************************************************************************************
 
 
-
 function createStarPosition(mouseEvent) {
-  console.log("draw star")
-  drawStar(mouseEvent)
+  const randomValue = randomRange(0,100)
+  switch(true) {
+    case (randomValue <= 50):
+      drawCircle(mouseEvent)
+      break
+    case (randomValue > 50):
+      drawStar(mouseEvent)
+      break
+  }
 }
+
 
 const styles = {
   star: {
@@ -115,11 +120,24 @@ const styles = {
   }
 }
 
+function drawCircle(mouseEvent) {
+  console.log("here")
+  console.log(mouseEvent)
+  const star = new PIXI.Graphics();
+  star.lineStyle(styles.star.line.weight, styles.star.line.color, 1);
+  star.beginFill(styles.star.color, 1);
+  star.drawCircle(0, 0, randomRange(2, 5), randomRange(2, 5))
+  star.position.set(mouseEvent.x, mouseEvent.y)
+  star.endFill();
+  container.addChild(star);
+  stars.push(star)
+}
+
 function drawStar(mouseEvent) {
   const star = new PIXI.Graphics();
   star.lineStyle(styles.star.line.weight, styles.star.line.color, 1);
   star.beginFill(styles.star.color, 1);
-  star.drawCircle(0, 0, randomRange(2, 5))
+  star.drawStar(0, 0, randomRange(5, 20), randomRange(2, 7))
   star.position.set(mouseEvent.x, mouseEvent.y)
   star.endFill();
   container.addChild(star);
