@@ -1,7 +1,8 @@
 
 import * as PIXI from "pixi.js";
 
-const container = new PIXI.Container();
+const starContainer = new PIXI.Container()
+const lineContainer = new PIXI.Container()
 
 const app = new PIXI.Application(
   800,
@@ -11,9 +12,13 @@ const app = new PIXI.Application(
   }
 );
 
+PIXI.settings.SORTABLE_CHILDREN = true
 
-app.stage.addChild(container);
 document.body.appendChild(app.view);
+
+app.stage.addChild(lineContainer);
+
+app.stage.addChild(starContainer);
 
 let mouseTrack = 0
 
@@ -46,9 +51,11 @@ function setConstellationStarCount() {
 
 function resetCanvas(event) {
   stars = []
-  container.removeChildren()
+  starContainer.removeChildren()
+  lineContainer.removeChildren()
   isDone = false
-  container.rotation = 0
+  starContainer.rotation = 0
+  lineContainer.rotation = 0
   mouseTrack = 0
   storeMousePos(event)
 }
@@ -70,8 +77,17 @@ function onMouseMove(mouseEvent) {
 
         if (stars.length === constellationStarCount) {
         connectStars()
+
+        for (var i = 0; i < starContainer.children.length - 1; i++) {
+          console.log("starContainer.children[i]")
+          starContainer.children[i].tint = Math.random() * 0xFFFFFF;
+          lineContainer.children[i].tint = Math.random() * 0xFFFFFF;
+        }
+
         stars = []
         isDone = true
+
+        
       }
 
       if (!isDone) {
@@ -121,15 +137,13 @@ const styles = {
 }
 
 function drawCircle(mouseEvent) {
-  console.log("here")
-  console.log(mouseEvent)
   const star = new PIXI.Graphics();
   star.lineStyle(styles.star.line.weight, styles.star.line.color, 1);
   star.beginFill(styles.star.color, 1);
   star.drawCircle(0, 0, randomRange(2, 5), randomRange(2, 5))
   star.position.set(mouseEvent.x, mouseEvent.y)
   star.endFill();
-  container.addChild(star);
+  starContainer.addChild(star);
   stars.push(star)
 }
 
@@ -140,7 +154,7 @@ function drawStar(mouseEvent) {
   star.drawStar(0, 0, randomRange(5, 20), randomRange(2, 7))
   star.position.set(mouseEvent.x, mouseEvent.y)
   star.endFill();
-  container.addChild(star);
+  starContainer.addChild(star);
   stars.push(star)
 }
 
@@ -157,7 +171,7 @@ function drawLine(pointA, pointB) {
     line.lineStyle(styles.line.weight, styles.line.color, 1);
     line.moveTo(pointA.x, pointA.y);
     line.lineTo(pointB.x, pointB.y)
-    container.addChild(line);
+    lineContainer.addChild(line);
   }
 }
 
@@ -165,17 +179,25 @@ function randomRange(min, max) {
   return Math.ceil(Math.random() * (max - min) + min)
 }
 
-container.x = app.screen.width / 2;
-container.y = app.screen.height / 2;
+starContainer.x = app.screen.width / 2;
+starContainer.y = app.screen.height / 2;
 
-container.pivot.x = app.screen.width / 2
-container.pivot.y = app.screen.height / 2
+starContainer.pivot.x = app.screen.width / 2
+starContainer.pivot.y = app.screen.height / 2
+
+
+lineContainer.x = app.screen.width / 2;
+lineContainer.y = app.screen.height / 2;
+
+lineContainer.pivot.x = app.screen.width / 2
+lineContainer.pivot.y = app.screen.height / 2
 
 
 
 app.ticker.add((delta) => {
   if (isDone) {
-    container.rotation += 0.01 * delta;
+    starContainer.rotation += 0.01 * delta;
+    lineContainer.rotation += 0.01 * delta;
   }
 });
 
