@@ -1,5 +1,6 @@
 
-import * as PIXI from "pixi.js";
+import * as PIXI from "pixi.js"
+import { arabToRoman } from "roman-numbers"
 import nouns from "./nouns.json"
 import animals from "./animals.json"
 
@@ -69,7 +70,7 @@ function firstLetterUpperCase(string) {
 const constellationNameText = new PIXI.Text(
   firstLetterUpperCase(nouns[randomRange(0, nouns.length - 1)]) + " "
   + firstLetterUpperCase(animals[randomRange(0, animals.length - 1)])
-  + " XII", style2
+  + "______", style2
 )
   
 constellationNameText.visible = false
@@ -134,8 +135,8 @@ function resetCanvas(event) {
   constellationNameText.visible = false
   constellationNameText.setText(
     firstLetterUpperCase(nouns[randomRange(0, nouns.length - 1)]) + " "
-    + firstLetterUpperCase(animals[randomRange(0, animals.length - 1)])
-    + " XII", style2
+    + firstLetterUpperCase(animals[randomRange(0, animals.length - 1)]) + " "
+    + arabToRoman(randomRange(0,50)), style2
   )
 }
 
