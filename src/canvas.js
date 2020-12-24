@@ -101,7 +101,10 @@ let constellationStarCount
 let oldMousePos = []
 
 document.body.addEventListener("mousemove", (event) => onMouseMove(event))
+document.body.addEventListener("touchmove", (event) => onMouseMove(event))
 document.body.addEventListener("click", (event) => onClick(event))
+document.body.addEventListener("touchstart", (event) => onClick(event))
+
 
 setMouseTrackToNextStar()
 setConstellationStarCount()
@@ -115,6 +118,7 @@ function setConstellationStarCount() {
 }
 
 function onClick(event) {
+  event.preventDefault()
   if (isDone) {
     resetCanvas(event)
   }
@@ -136,7 +140,7 @@ function resetCanvas(event) {
   constellationNameText.setText(
     firstLetterUpperCase(nouns[randomRange(0, nouns.length - 1)]) + " "
     + firstLetterUpperCase(animals[randomRange(0, animals.length - 1)]) + " "
-    + arabToRoman(randomRange(0,50)), style2
+    + arabToRoman(randomRange(0,20)), style2
   )
 }
 
@@ -147,6 +151,7 @@ function setMouseTrackToNextStar() {
 
 
 function onMouseMove(mouseEvent) {
+  event.preventDefault()
   mouseTrack += 1
   if (mouseTrack > mousetrackToNextStar) {
 
