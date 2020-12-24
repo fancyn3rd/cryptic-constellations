@@ -1,5 +1,7 @@
 
 import * as PIXI from "pixi.js";
+import nouns from "./nouns.json"
+import animals from "./animals.json"
 
 const starContainer = new PIXI.Container()
 const lineContainer = new PIXI.Container()
@@ -45,12 +47,37 @@ const style = new PIXI.TextStyle({
   wordWrapWidth: 350
 });
 
-const text = new PIXI.Text('Use m0use to f1nd a const3llation', style);
-text.pivot.x = text.width / 2
-text.pivot.y = text.height / 2
-text.x = app.screen.width/2
-text.y = app.screen.height/2 - 20
-app.stage.addChild(text);
+const style2 = new PIXI.TextStyle({
+  fill: colors[0],
+  fontSize: 36,
+  fontFamily: "Verdana",
+  fontStyle: 'italic',
+});
+
+const introText = new PIXI.Text('Use m0use to f1nd a const3llation', style);
+introText.pivot.x = introText.width / 2
+introText.pivot.y = introText.height / 2
+introText.x = app.screen.width/2
+introText.y = app.screen.height/2 - 20
+app.stage.addChild(introText);
+
+
+function firstLetterUpperCase(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
+const constellationNameText = new PIXI.Text(
+  firstLetterUpperCase(nouns[randomRange(0, nouns.length - 1)]) + " "
+  + firstLetterUpperCase(animals[randomRange(0, animals.length - 1)])
+  + " XII", style2
+)
+  
+constellationNameText.visible = false
+constellationNameText.pivot.x = constellationNameText.width / 2
+constellationNameText.pivot.y = constellationNameText.height / 2
+constellationNameText.x = app.screen.width/2
+constellationNameText.y = app.screen.height - 50
+app.stage.addChild(constellationNameText);
 
 
 
@@ -64,9 +91,9 @@ let almostDone = true
 
 const MAX_STARS = 10
 const MIN_STARS = 4
-const MIN_MOUSETRACK = 10
-const MAX_MOUSETRACK = 40
-const MIN_AXIS_DIFFERENCE = 20
+const MIN_MOUSETRACK = 5
+const MAX_MOUSETRACK = 8
+const MIN_AXIS_DIFFERENCE = 30
 
 let mousetrackToNextStar
 let constellationStarCount
@@ -93,7 +120,7 @@ function onClick(event) {
 }
 
 function resetCanvas(event) {
-  text.visible = false
+  introText.visible = false
   stars = []
   starContainer.removeChildren()
   lineContainer.removeChildren()
@@ -104,6 +131,12 @@ function resetCanvas(event) {
   mouseTrack = 0
   storeMousePos(event)
   tintChilds(backgroundContainer, colors[0])
+  constellationNameText.visible = false
+  constellationNameText.setText(
+    firstLetterUpperCase(nouns[randomRange(0, nouns.length - 1)]) + " "
+    + firstLetterUpperCase(animals[randomRange(0, animals.length - 1)])
+    + " XII", style2
+  )
 }
 
 
@@ -131,6 +164,7 @@ function onMouseMove(mouseEvent) {
 
         stars = []
         almostDone = true
+        constellationNameText.visible = true
         setTimeout(() => isDone = true, 1000)
 
         
