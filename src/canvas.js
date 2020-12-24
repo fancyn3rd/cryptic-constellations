@@ -9,8 +9,8 @@ const lineContainer = new PIXI.Container()
 const backgroundContainer = new PIXI.Container()
 
 const app = new PIXI.Application(
-  800,
-  600, {
+ window.innerWidth,
+ window.innerHeight, {
     antialias: true,
     backgroundColor : "black"
   }
