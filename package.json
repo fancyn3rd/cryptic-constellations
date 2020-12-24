@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "express": "^4.17.1",
+    "path": "^0.12.7",
     "pixi.js": "^4.8.9",
     "regenerator-runtime": "^0.13.7",
     "roman-numbers": "^1.0.1"
