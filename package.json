@@ -4,7 +4,8 @@
   "description": "A simple chaotic pattern generator",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --open --mode development",
+    "watch": "webpack-dev-server --open",
+    "start": "node server.js",
     "build": "webpack --mode production",
     "heroku-postbuild": "webpack --mode production"
   },
