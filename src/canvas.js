@@ -74,10 +74,6 @@ const constellationNameText = new PIXI.Text(
 )
   
 constellationNameText.visible = false
-constellationNameText.pivot.x = constellationNameText.width / 2
-constellationNameText.pivot.y = constellationNameText.height / 2
-constellationNameText.x = app.screen.width/2
-constellationNameText.y = app.screen.height - 50
 app.stage.addChild(constellationNameText);
 
 
@@ -168,6 +164,10 @@ function onMouseMove(mouseEvent) {
         stars = []
         almostDone = true
         constellationNameText.visible = true
+        constellationNameText.pivot.x = constellationNameText.width / 2
+        constellationNameText.pivot.y = constellationNameText.height / 2
+        constellationNameText.x = app.screen.width/2
+        constellationNameText.y = app.screen.height - 50
         setTimeout(() => isDone = true, 1000)
 
         
