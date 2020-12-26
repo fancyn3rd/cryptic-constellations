@@ -100,10 +100,8 @@ let mousetrackToNextStar
 let constellationStarCount
 let oldMousePos = []
 
-document.body.addEventListener("mousemove", (event) => onMouseMove(event))
-document.body.addEventListener("touchmove", (event) => onMouseMove(event))
-document.body.addEventListener("click", (event) => onClick(event))
-document.body.addEventListener("touchstart", (event) => onClick(event))
+document.body.addEventListener("pointermove", (event) => onMouseMove(event))
+document.body.addEventListener("pointerdown", (event) => onClick(event))
 
 
 setMouseTrackToNextStar()
@@ -118,7 +116,6 @@ function setConstellationStarCount() {
 }
 
 function onClick(event) {
-  event.preventDefault()
   if (isDone) {
     resetCanvas(event)
   }
