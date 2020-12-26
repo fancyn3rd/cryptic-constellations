@@ -55,7 +55,10 @@ const style2 = new PIXI.TextStyle({
   fontStyle: 'italic',
 });
 
-const introText = new PIXI.Text('Use m0use to f1nd a const3llation', style);
+var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+var userInputDevice = isMobile ? "f1nger" : "m0use"
+
+const introText = new PIXI.Text(`Use ${userInputDevice} to f1nd a const3llation`, style);
 introText.pivot.x = introText.width / 2
 introText.pivot.y = introText.height / 2
 introText.x = app.screen.width/2
