@@ -1,36 +1,46 @@
 
 import * as PIXI from "pixi.js"
 import { arabToRoman } from "roman-numbers"
+
+import {
+  app, 
+  colors,
+  styles,
+  introTextStyle,
+  nameTextStyle,
+  USER_INPUT_DEVICE,
+  MAX_STARS,
+  MIN_STARS,
+  MAX_MOUSETRACK,
+  MIN_MOUSETRACK,
+  MIN_AXIS_DIFFERENCE,
+  ROTATION_SPEED
+} from "./config.js"
+
 import nouns from "./nouns.json"
 import animals from "./animals.json"
 
+let stars = []
+
+let isDone = true
+let almostDone = true
+
+let mouseTrack = 0
+let mousetrackToNextStar
+let constellationStarCount
+let oldMousePos = []
+
 const starContainer = new PIXI.Container()
+setupContainer(starContainer)
+
 const lineContainer = new PIXI.Container()
+setupContainer(lineContainer)
+
 const backgroundContainer = new PIXI.Container()
+setupContainer(backgroundContainer)
 
-const app = new PIXI.Application(
- window.innerWidth,
- window.innerHeight, {
-    antialias: true,
-    backgroundColor : "black"
-  }
-);
-
-const colors = [
-  "0xffffff",
-  "0x71fff1",
-  "0xb6fffd",
-  "0x8ad3ff",
-  "0xff7d00",
-  "0xffd23f",
-  "0x3bceac",
-  "0xd7f75b",
-  "0xfb710b",
-  "0xbf74a0",
-  "0x8afed6",
-  "0x36f219",
-  "0xee2e31",
-]
+document.body.addEventListener("pointermove", (event) => onMouseMove(event))
+document.body.addEventListener("pointerdown", (event) => onClick(event))
 
 document.body.appendChild(app.view);
 
@@ -38,73 +48,30 @@ app.stage.addChild(backgroundContainer)
 app.stage.addChild(lineContainer);
 app.stage.addChild(starContainer);
 
-const style = new PIXI.TextStyle({
-  fill: colors[0],
-  fontSize: 36,
-  fontFamily: "Verdana",
-  fontStyle: 'italic',
-  align: "center",
-  wordWrap: true,
-  wordWrapWidth: 350
-});
+drawBackgroundStars()
+setMouseTrackToNextStar()
+setConstellationStarCount()
 
-const style2 = new PIXI.TextStyle({
-  fill: colors[0],
-  fontSize: isMobile ? 26 : 36,
-  fontFamily: "Verdana",
-  fontStyle: 'italic',
-});
 
-var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-var userInputDevice = isMobile ? "f1nger" : "m0use"
 
-const introText = new PIXI.Text(`Use ${userInputDevice} to f1nd a const3llation`, style);
+
+const introText = new PIXI.Text(`Use ${USER_INPUT_DEVICE} to f1nd a const3llation`, introTextStyle);
 introText.pivot.x = introText.width / 2
 introText.pivot.y = introText.height / 2
 introText.x = app.screen.width/2
 introText.y = app.screen.height/2 - 20
 app.stage.addChild(introText);
 
-
-function firstLetterUpperCase(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1)
-}
-
 const constellationNameText = new PIXI.Text(
   firstLetterUpperCase(nouns[randomRange(0, nouns.length - 1)]) + " "
   + firstLetterUpperCase(animals[randomRange(0, animals.length - 1)]) + " "
-  + "X", style2
+  + "X", nameTextStyle
 )
-  
-//constellationNameText.visible = false
+
+constellationNameText.visible = false
 app.stage.addChild(constellationNameText);
 
 
-
-
-
-let mouseTrack = 0
-
-let stars = []
-let isDone = true
-let almostDone = true
-
-const MAX_STARS = 10
-const MIN_STARS = 4
-const MIN_MOUSETRACK = 5
-const MAX_MOUSETRACK = 8
-const MIN_AXIS_DIFFERENCE = 30
-
-let mousetrackToNextStar
-let constellationStarCount
-let oldMousePos = []
-
-document.body.addEventListener("pointermove", (event) => onMouseMove(event))
-document.body.addEventListener("pointerdown", (event) => onClick(event))
-
-
-setMouseTrackToNextStar()
-setConstellationStarCount()
 
 function storeMousePos(mouse) {
   oldMousePos = {x: mouse.x, y: mouse.y}
@@ -133,11 +100,10 @@ function resetCanvas(event) {
   storeMousePos(event)
   tintChilds(backgroundContainer, colors[0])
   constellationNameText.visible = false
-  constellationNameText.setText(
+  constellationNameText.text =
     firstLetterUpperCase(nouns[randomRange(0, nouns.length - 1)]) + " "
     + firstLetterUpperCase(animals[randomRange(0, animals.length - 1)]) + " "
-    + arabToRoman(randomRange(0,20)), style2
-  )
+    + arabToRoman(randomRange(0,20)), nameTextStyle
 }
 
 
@@ -147,7 +113,6 @@ function setMouseTrackToNextStar() {
 
 
 function onMouseMove(mouseEvent) {
-  event.preventDefault()
   mouseTrack += 1
   if (mouseTrack > mousetrackToNextStar) {
 
@@ -200,6 +165,10 @@ function isMousePosDifferent(axis, currentMouse, minDifference) {
 //*******************************************************************************************
 
 
+function firstLetterUpperCase(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
 function createStarPosition(mouseEvent) {
   const randomValue = randomRange(0,100)
   switch(true) {
@@ -213,33 +182,27 @@ function createStarPosition(mouseEvent) {
 }
 
 
-const styles = {
-  star: {
-    line: {
-      weight: 1,
-      color:  colors[0]
-    },
-    color:  colors[0],
-    size: 5
-  },
-  line: {
-    weight: 2,
-    color:  colors[0]
+function setupContainer(container) {
+  container.x = app.screen.width / 2;
+  container.y = app.screen.height / 2;
+  container.pivot.x = app.screen.width / 2
+  container.pivot.y = app.screen.height / 2
+}
+
+function drawBackgroundStars() {
+  for (var i = 0; i < 1000; i++) {
+    const star = new PIXI.Graphics();
+    star.lineStyle(styles.star.line.weight, styles.star.line.color, 1);
+    star.beginFill(styles.star.color, 1);
+    star.drawRect(0, 0, 0.1, 0.1)
+    star.lineStyle(styles.star.line.weight, colors[0], 1);
+    star.drawRect(1, 1, 0.1, 0.1)
+    star.position.set(randomRange(0, app.screen.width), randomRange(0, app.screen.height))
+    star.endFill();
+    backgroundContainer.addChild(star);
   }
 }
 
-for (var i=0; i<1000; i++) {
-  const star = new PIXI.Graphics();
-  star.lineStyle(styles.star.line.weight, styles.star.line.color, 1);
-  star.beginFill(styles.star.color, 1);
-  star.drawRect(0, 0, 0.1, 0.1)
-  star.lineStyle(styles.star.line.weight, colors[0], 1);
-  star.drawRect(1, 1, 0.1, 0.1)
-  star.position.set(randomRange(0, app.screen.width), randomRange(0, app.screen.height))
-  star.endFill();
-  backgroundContainer.addChild(star);
-
-}
 
 function drawCircle(mouseEvent) {
   const star = new PIXI.Graphics();
@@ -285,25 +248,10 @@ function randomRange(min, max) {
   return Math.ceil(Math.random() * (max - min) + min)
 }
 
-starContainer.x = app.screen.width / 2;
-starContainer.y = app.screen.height / 2;
-
-starContainer.pivot.x = app.screen.width / 2
-starContainer.pivot.y = app.screen.height / 2
-
-
-lineContainer.x = app.screen.width / 2;
-lineContainer.y = app.screen.height / 2;
-
-lineContainer.pivot.x = app.screen.width / 2
-lineContainer.pivot.y = app.screen.height / 2
-
-const rotationSpeed = 0.005
-
 app.ticker.add((delta) => {
   if (isDone) {
-    starContainer.rotation += 0.005 * delta;
-    lineContainer.rotation += 0.005 * delta;
+    starContainer.rotation += ROTATION_SPEED * delta;
+    lineContainer.rotation += ROTATION_SPEED * delta;
 
     const rndColor = colors[randomRange(0, colors.length - 1)]
 
