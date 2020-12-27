@@ -1,10 +1,11 @@
 
-const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const path = require("path")
 
+const isProductionMode = process.argv[process.argv.length - 1] === "production" ? true : false
+
 module.exports = {
-  devtool: "eval-source-map",
+  devtool: isProductionMode ? "none" : "eval-source-map",
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "./bundle.js"
