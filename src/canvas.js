@@ -2,6 +2,9 @@
 import * as PIXI from "pixi.js"
 import { arabToRoman } from "roman-numbers"
 
+import nouns from "./nouns.json"
+import animals from "./animals.json"
+
 import {
   app, 
   colors,
@@ -17,13 +20,11 @@ import {
   ROTATION_SPEED
 } from "./config.js"
 
-import nouns from "./nouns.json"
-import animals from "./animals.json"
-
 let stars = []
+let rndColor
 
-let isDone = true
-let almostDone = true
+let isConstellationRoating = true
+let isConstellationDrawn = true
 
 let mouseTrack = 0
 let mousetrackToNextStar
@@ -68,11 +69,11 @@ constellationNameText.visible = false
 app.stage.addChild(constellationNameText);
 
 app.ticker.add((delta) => {
-  if (isDone) {
+  if (isConstellationRoating) {
     starContainer.rotation += ROTATION_SPEED * delta;
     lineContainer.rotation += ROTATION_SPEED * delta;
 
-    const rndColor = colors[randomRange(0, colors.length - 1)]
+    rndColor = colors[randomRange(0, colors.length - 1)]
     tintChilds(backgroundContainer, rndColor)
   }
 });
@@ -88,7 +89,7 @@ function setupContainer(container) {
 }
 
 function onClick(event) {
-  if (isDone) {
+  if (isConstellationRoating) {
     resetCanvas(event)
   }
 }
@@ -98,8 +99,8 @@ function resetCanvas(event) {
   stars = []
   starContainer.removeChildren()
   lineContainer.removeChildren()
-  isDone = false
-  almostDone = false
+  isConstellationRoating = false
+  isConstellationDrawn = false
   starContainer.rotation = 0
   lineContainer.rotation = 0
   mouseTrack = 0
@@ -129,16 +130,16 @@ function onMouseMove(mouseEvent) {
         tintChilds(lineContainer, rndColor)
 
         stars = []
-        almostDone = true
+        isConstellationDrawn = true
         constellationNameText.visible = true
         constellationNameText.pivot.x = constellationNameText.width / 2
         constellationNameText.pivot.y = constellationNameText.height / 2
         constellationNameText.x = app.screen.width/2
         constellationNameText.y = app.screen.height - 50
-        setTimeout(() => isDone = true, 1000)
+        setTimeout(() => isConstellationRoating = true, 1000)
       }
 
-      if (!almostDone) {
+      if (!isConstellationDrawn) {
         createStarPosition(mouseEvent)
         setMouseTrackToNextStar()
         mouseTrack = 0
