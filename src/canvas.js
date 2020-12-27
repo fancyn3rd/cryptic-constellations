@@ -50,7 +50,7 @@ const style = new PIXI.TextStyle({
 
 const style2 = new PIXI.TextStyle({
   fill: colors[0],
-  fontSize: 36,
+  fontSize: isMobile ? 26 : 36,
   fontFamily: "Verdana",
   fontStyle: 'italic',
 });
@@ -72,11 +72,11 @@ function firstLetterUpperCase(string) {
 
 const constellationNameText = new PIXI.Text(
   firstLetterUpperCase(nouns[randomRange(0, nouns.length - 1)]) + " "
-  + firstLetterUpperCase(animals[randomRange(0, animals.length - 1)])
-  + "______", style2
+  + firstLetterUpperCase(animals[randomRange(0, animals.length - 1)]) + " "
+  + "X", style2
 )
   
-constellationNameText.visible = false
+//constellationNameText.visible = false
 app.stage.addChild(constellationNameText);
 
 
