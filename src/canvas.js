@@ -52,9 +52,6 @@ drawBackgroundStars()
 setMouseTrackToNextStar()
 setConstellationStarCount()
 
-
-
-
 const introText = new PIXI.Text(`Use ${USER_INPUT_DEVICE} to f1nd a const3llation`, introTextStyle);
 introText.pivot.x = introText.width / 2
 introText.pivot.y = introText.height / 2
@@ -67,18 +64,27 @@ const constellationNameText = new PIXI.Text(
   + firstLetterUpperCase(animals[randomRange(0, animals.length - 1)]) + " "
   + "X", nameTextStyle
 )
-
 constellationNameText.visible = false
 app.stage.addChild(constellationNameText);
 
+app.ticker.add((delta) => {
+  if (isDone) {
+    starContainer.rotation += ROTATION_SPEED * delta;
+    lineContainer.rotation += ROTATION_SPEED * delta;
+
+    const rndColor = colors[randomRange(0, colors.length - 1)]
+    tintChilds(backgroundContainer, rndColor)
+  }
+});
 
 
-function storeMousePos(mouse) {
-  oldMousePos = {x: mouse.x, y: mouse.y}
-}
+//*******************************************************************************************
 
-function setConstellationStarCount() {
-  constellationStarCount = randomRange(MIN_STARS, MAX_STARS)
+function setupContainer(container) {
+  container.x = app.screen.width / 2;
+  container.y = app.screen.height / 2;
+  container.pivot.x = app.screen.width / 2
+  container.pivot.y = app.screen.height / 2
 }
 
 function onClick(event) {
@@ -106,12 +112,6 @@ function resetCanvas(event) {
     + arabToRoman(randomRange(0,20)), nameTextStyle
 }
 
-
-function setMouseTrackToNextStar() {
-  mousetrackToNextStar = randomRange(MIN_MOUSETRACK, MAX_MOUSETRACK)
-}
-
-
 function onMouseMove(mouseEvent) {
   mouseTrack += 1
   if (mouseTrack > mousetrackToNextStar) {
@@ -125,7 +125,6 @@ function onMouseMove(mouseEvent) {
         connectStars()
 
         const rndColor = colors[randomRange(0, colors.length - 1)]
-
         tintChilds(starContainer, rndColor)
         tintChilds(lineContainer, rndColor)
 
@@ -137,8 +136,6 @@ function onMouseMove(mouseEvent) {
         constellationNameText.x = app.screen.width/2
         constellationNameText.y = app.screen.height - 50
         setTimeout(() => isDone = true, 1000)
-
-        
       }
 
       if (!almostDone) {
@@ -148,25 +145,6 @@ function onMouseMove(mouseEvent) {
       }
     }
   }
-}
-
-function tintChilds(parent, color) {
-  for (var i = 0; i < parent.children.length; i++) {
-    parent.children[i].tint = color
-  }
-}
-
-function isMousePosDifferent(axis, currentMouse, minDifference) {
-  return currentMouse[axis] > oldMousePos[axis] + minDifference ||
-    currentMouse[axis] < oldMousePos[axis] - minDifference
-}
-
-
-//*******************************************************************************************
-
-
-function firstLetterUpperCase(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
 function createStarPosition(mouseEvent) {
@@ -180,29 +158,6 @@ function createStarPosition(mouseEvent) {
       break
   }
 }
-
-
-function setupContainer(container) {
-  container.x = app.screen.width / 2;
-  container.y = app.screen.height / 2;
-  container.pivot.x = app.screen.width / 2
-  container.pivot.y = app.screen.height / 2
-}
-
-function drawBackgroundStars() {
-  for (var i = 0; i < 1000; i++) {
-    const star = new PIXI.Graphics();
-    star.lineStyle(styles.star.line.weight, styles.star.line.color, 1);
-    star.beginFill(styles.star.color, 1);
-    star.drawRect(0, 0, 0.1, 0.1)
-    star.lineStyle(styles.star.line.weight, colors[0], 1);
-    star.drawRect(1, 1, 0.1, 0.1)
-    star.position.set(randomRange(0, app.screen.width), randomRange(0, app.screen.height))
-    star.endFill();
-    backgroundContainer.addChild(star);
-  }
-}
-
 
 function drawCircle(mouseEvent) {
   const star = new PIXI.Graphics();
@@ -230,6 +185,7 @@ function connectStars() {
   for (var i = 0; i < MAX_STARS; i++) {
     drawLine(stars[i], stars[i + 1])
   }
+ 
   drawLine(stars[randomRange(0, stars.length - 1)], stars[randomRange(0, stars.length - 1)])
   drawLine(stars[randomRange(0, stars.length - 1)], stars[randomRange(0, stars.length - 1)])
 }
@@ -244,18 +200,51 @@ function drawLine(pointA, pointB) {
   }
 }
 
+function drawBackgroundStars() {
+  for (var i = 0; i < 1000; i++) {
+    const star = new PIXI.Graphics();
+    star.lineStyle(styles.star.line.weight, styles.star.line.color, 1);
+    star.beginFill(styles.star.color, 1);
+    star.drawRect(0, 0, 0.1, 0.1)
+    star.lineStyle(styles.star.line.weight, colors[0], 1);
+    star.drawRect(1, 1, 0.1, 0.1)
+    star.position.set(randomRange(0, app.screen.width), randomRange(0, app.screen.height))
+    star.endFill();
+    backgroundContainer.addChild(star);
+  }
+}
+
+
+function isMousePosDifferent(axis, currentMouse, minDifference) {
+  return currentMouse[axis] > oldMousePos[axis] + minDifference ||
+    currentMouse[axis] < oldMousePos[axis] - minDifference
+}
+
+function storeMousePos(mouse) {
+  oldMousePos = {x: mouse.x, y: mouse.y}
+}
+
+function setMouseTrackToNextStar() {
+  mousetrackToNextStar = randomRange(MIN_MOUSETRACK, MAX_MOUSETRACK)
+}
+
+function setConstellationStarCount() {
+  constellationStarCount = randomRange(MIN_STARS, MAX_STARS)
+}
+
+function tintChilds(parent, color) {
+  for (var i = 0; i < parent.children.length; i++) {
+    parent.children[i].tint = color
+  }
+}
+
+function firstLetterUpperCase(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
 function randomRange(min, max) {
   return Math.ceil(Math.random() * (max - min) + min)
 }
 
-app.ticker.add((delta) => {
-  if (isDone) {
-    starContainer.rotation += ROTATION_SPEED * delta;
-    lineContainer.rotation += ROTATION_SPEED * delta;
 
-    const rndColor = colors[randomRange(0, colors.length - 1)]
-
-        tintChilds(backgroundContainer, rndColor)
-  }
-});
 
