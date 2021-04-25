@@ -34,14 +34,11 @@ let oldMousePos = []
 document.body.addEventListener("pointermove", (event) => onPointerMove(event))
 document.body.addEventListener("pointerdown", (event) => onPointerClick(event))
 
-const starContainer = new PIXI.Container()
-setupContainer(starContainer)
-
-const lineContainer = new PIXI.Container()
-setupContainer(lineContainer)
-
 const backgroundContainer = new PIXI.Container()
 setupContainer(backgroundContainer)
+
+const constellationConatiner = new PIXI.Container()
+setupContainer(constellationConatiner)
 
 const introText = new PIXI.Text(`Use ${USER_INPUT_DEVICE} to f1nd a const3llation`, introTextStyle);
 introText.pivot.x = introText.width / 2
@@ -58,8 +55,7 @@ constellationNameText.visible = false
 
 document.body.appendChild(app.view);
 app.stage.addChild(backgroundContainer)
-app.stage.addChild(lineContainer);
-app.stage.addChild(starContainer);
+app.stage.addChild(constellationConatiner)
 app.stage.addChild(introText);
 app.stage.addChild(constellationNameText);
 
@@ -69,8 +65,7 @@ setConstellationStarCount()
 
 app.ticker.add((delta) => {
   if (isConstellationRoating) {
-    starContainer.rotation += ROTATION_SPEED * delta;
-    lineContainer.rotation += ROTATION_SPEED * delta;
+    constellationConatiner.rotation += ROTATION_SPEED * delta;
 
     rndColor = colors[randomRange(0, colors.length - 1)]
     tintChilds(backgroundContainer, rndColor)
@@ -96,12 +91,12 @@ function onPointerClick(event) {
 function resetCanvas(event) {
   introText.visible = false
   stars = []
-  starContainer.removeChildren()
-  lineContainer.removeChildren()
+  constellationConatiner.removeChildren()
+  constellationConatiner.removeChildren()
   isConstellationRoating = false
   isConstellationDrawn = false
-  starContainer.rotation = 0
-  lineContainer.rotation = 0
+  constellationConatiner.rotation = 0
+  constellationConatiner.rotation = 0
   mouseTrack = 0
   storeMousePos(event)
   tintChilds(backgroundContainer, colors[0])
@@ -125,8 +120,8 @@ function onPointerMove(event) {
             connectStars()
 
             const rndColor = colors[randomRange(0, colors.length - 1)]
-            tintChilds(starContainer, rndColor)
-            tintChilds(lineContainer, rndColor)
+            tintChilds(constellationConatiner, rndColor)
+            tintChilds(constellationConatiner, rndColor)
 
             stars = []
             isConstellationDrawn = true
@@ -166,7 +161,7 @@ function drawCircle(event) {
   star.drawCircle(0, 0, randomRange(2, 5), randomRange(2, 5))
   star.position.set(event.x, event.y)
   star.endFill();
-  starContainer.addChild(star);
+  constellationConatiner.addChild(star);
   stars.push(star)
 }
 
@@ -177,7 +172,7 @@ function drawStar(event) {
   star.drawStar(0, 0, randomRange(3, 10), randomRange(2, 8))
   star.position.set(event.x, event.y)
   star.endFill();
-  starContainer.addChild(star);
+  constellationConatiner.addChild(star);
   stars.push(star)
 }
 
@@ -196,7 +191,7 @@ function drawLine(pointA, pointB) {
     line.lineStyle(styles.line.weight, styles.line.color, 1);
     line.moveTo(pointA.x, pointA.y);
     line.lineTo(pointB.x, pointB.y)
-    lineContainer.addChild(line);
+    constellationConatiner.addChild(line);
   }
 }
 
