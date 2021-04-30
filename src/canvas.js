@@ -24,7 +24,7 @@ let stars = []
 let rndColor
 
 let isConstellationRoating = true
-let isConstellationDrawn = true
+let isConstellationDrawn = false
 
 let mouseTrack = 0
 let mousetrackToNextStar
@@ -67,10 +67,62 @@ drawBackgroundStars()
 setMouseTrackToNextStar()
 setConstellationStarCount()
 
+let time = 0
+let scaleValue = 1
+let isStarGrowing = false
+let pickedStar = null
+
 app.ticker.add((delta) => {
-  if (isConstellationRoating) {
-    starContainer.rotation += ROTATION_SPEED * delta;
-    lineContainer.rotation += ROTATION_SPEED * delta;
+  if (isConstellationRoating && isConstellationDrawn) {
+    //starContainer.rotation += ROTATION_SPEED * delta;
+        //constellationConatiner.rotation += ROTATION_SPEED * time;
+        
+          
+          
+          if (pickedStar) {
+            if (!stars[pickedStar].initialColor) {
+              stars[pickedStar].initialColor = stars[pickedStar].tint
+            }
+            stars[pickedStar].scale.set(scaleValue)*delta
+          }
+        
+          if (!isStarGrowing && scaleValue <= 1) {
+            pickedStar = randomRange(0, stars.length - 1)
+            isStarGrowing = true
+          }
+
+          if (isStarGrowing && scaleValue < 4) {
+            scaleValue += 0.03
+          }
+
+          if (isStarGrowing && scaleValue >= 4) {
+            isStarGrowing = false
+          }
+
+          if (!isStarGrowing && scaleValue > 1) {
+            scaleValue -= 0.03
+          }
+
+          
+          // if (index > 0) {
+          //   stars[index].tint = rndColor;
+          //   stars[index].scale.set(3)
+          //   stars[index].zIndex = 100
+          //   stars[index - 1].tint = 0xFFFFFF;
+          //   stars[index - 1].scale.set(1)
+          //   stars[index - 1].zIndex = 100
+          // }
+    
+          // if (index === 0) {
+          //   stars[index].tint = rndColor;
+          //   stars[index].scale.set(3)
+          //   stars[stars.length - 1].tint = 0xFFFFFF;
+          //   stars[stars.length - 1].scale.set(1)
+          // }
+    
+      
+
+
 
     rndColor = colors[randomRange(0, colors.length - 1)]
     tintChilds(backgroundContainer, rndColor)
@@ -113,6 +165,7 @@ function resetCanvas(event) {
 }
 
 function onPointerMove(event) {
+  if (stars.length <= constellationStarCount && !isConstellationDrawn) {
   mouseTrack += 1
   if (mouseTrack > mousetrackToNextStar) {
 
@@ -128,7 +181,7 @@ function onPointerMove(event) {
             tintChilds(starContainer, rndColor)
             tintChilds(lineContainer, rndColor)
 
-            stars = []
+            //stars = []
             isConstellationDrawn = true
             constellationNameText.visible = true
             constellationNameText.pivot.x = constellationNameText.width / 2
@@ -145,6 +198,7 @@ function onPointerMove(event) {
         }
       }
   }
+}
 }
 
 function createStarPosition(event) {
@@ -185,7 +239,8 @@ function connectStars() {
   for (var i = 0; i < MAX_STARS; i++) {
     drawLine(stars[i], stars[i + 1])
   }
- 
+  
+  console.log("this")
   drawLine(stars[randomRange(0, stars.length - 1)], stars[randomRange(0, stars.length - 1)])
   drawLine(stars[randomRange(0, stars.length - 1)], stars[randomRange(0, stars.length - 1)])
 }
