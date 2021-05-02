@@ -2,8 +2,8 @@
 import * as PIXI from "pixi.js"
 import { arabToRoman } from "roman-numbers"
 
-import nouns from "./nouns.json"
-import animals from "./animals.json"
+import nouns from "./words/nouns.json"
+import animals from "./words/animals.json"
 
 import {
   app, 
@@ -225,7 +225,6 @@ function connectStars() {
     drawLine(stars[i], stars[i + 1])
   }
   
-  console.log("this")
   drawLine(stars[randomRange(0, stars.length - 1)], stars[randomRange(0, stars.length - 1)])
   drawLine(stars[randomRange(0, stars.length - 1)], stars[randomRange(0, stars.length - 1)])
 }
