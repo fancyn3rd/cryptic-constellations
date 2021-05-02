@@ -17,13 +17,12 @@ import {
   MAX_MOUSETRACK,
   MIN_MOUSETRACK,
   MIN_AXIS_DIFFERENCE,
-  ROTATION_SPEED
 } from "./config.js"
 
 let stars = []
 let rndColor
 
-let isConstellationRoating = true
+let isConstellationAnimationPlaying = true
 let isConstellationDrawn = false
 
 let mouseTrack = 0
@@ -31,16 +30,16 @@ let mousetrackToNextStar
 let constellationStarCount
 let oldMousePos = []
 
-document.body.addEventListener("pointermove", (event) => onPointerMove(event))
-document.body.addEventListener("pointerdown", (event) => onPointerClick(event))
+let scaleValue = 1
+let isStarGrowing = false
+let pickedStar = null
 
 const starContainer = new PIXI.Container()
-setupContainer(starContainer)
-
 const lineContainer = new PIXI.Container()
-setupContainer(lineContainer)
-
 const backgroundContainer = new PIXI.Container()
+
+setupContainer(starContainer)
+setupContainer(lineContainer)
 setupContainer(backgroundContainer)
 
 const introText = new PIXI.Text(`Use ${USER_INPUT_DEVICE} to f1nd a const3llation`, introTextStyle);
@@ -63,71 +62,57 @@ app.stage.addChild(starContainer);
 app.stage.addChild(introText);
 app.stage.addChild(constellationNameText);
 
+document.body.addEventListener("pointermove", (event) => onPointerMove(event))
+document.body.addEventListener("pointerdown", (event) => onPointerClick(event))
+
 drawBackgroundStars()
 setMouseTrackToNextStar()
 setConstellationStarCount()
 
-let time = 0
-let scaleValue = 1
-let isStarGrowing = false
-let pickedStar = null
-
-app.ticker.add((delta) => {
-  if (isConstellationRoating && isConstellationDrawn) {
-    //starContainer.rotation += ROTATION_SPEED * delta;
-        //constellationConatiner.rotation += ROTATION_SPEED * time;
-        
-          
-          
-          if (pickedStar) {
-            if (!stars[pickedStar].initialColor) {
-              stars[pickedStar].initialColor = stars[pickedStar].tint
-            }
-            stars[pickedStar].scale.set(scaleValue)*delta
-          }
-        
-          if (!isStarGrowing && scaleValue <= 1) {
-            pickedStar = randomRange(0, stars.length - 1)
-            isStarGrowing = true
-          }
-
-          if (isStarGrowing && scaleValue < 4) {
-            scaleValue += 0.03
-          }
-
-          if (isStarGrowing && scaleValue >= 4) {
-            isStarGrowing = false
-          }
-
-          if (!isStarGrowing && scaleValue > 1) {
-            scaleValue -= 0.03
-          }
-
-          
-          // if (index > 0) {
-          //   stars[index].tint = rndColor;
-          //   stars[index].scale.set(3)
-          //   stars[index].zIndex = 100
-          //   stars[index - 1].tint = 0xFFFFFF;
-          //   stars[index - 1].scale.set(1)
-          //   stars[index - 1].zIndex = 100
-          // }
-    
-          // if (index === 0) {
-          //   stars[index].tint = rndColor;
-          //   stars[index].scale.set(3)
-          //   stars[stars.length - 1].tint = 0xFFFFFF;
-          //   stars[stars.length - 1].scale.set(1)
-          // }
-    
-      
-
-
-
-    rndColor = colors[randomRange(0, colors.length - 1)]
-    tintChilds(backgroundContainer, rndColor)
+app.ticker.add((deltaTime) => {
+  if (isConstellationAnimationPlaying && isConstellationDrawn) {
+    colorizeBackgroundStars()
+    doStarScalingAnimation(deltaTime)
   }
 });
+
+function colorizeBackgroundStars() {
+    rndColor = colors[randomRange(0, colors.length - 1)]
+    tintChilds(backgroundContainer, rndColor)
+}
+
+function doStarScalingAnimation(deltaTime) {
+
+  if (!isStarGrowing) {
+    switch (true) {
+      case (scaleValue <= 1):
+        pickedStar = randomRange(0, stars.length - 1)
+        isStarGrowing = true
+        break
+      case (scaleValue > 1):
+        scaleValue -= 0.03
+        break
+    }
+  }
+
+  if (isStarGrowing) {
+    switch (true) {
+      case (scaleValue < 4):
+        scaleValue += 0.03
+        break
+      case (scaleValue >= 4):
+        isStarGrowing = false
+        break
+    }
+  }
+
+  if (pickedStar) {
+    if (!stars[pickedStar].initialColor) {
+      stars[pickedStar].initialColor = stars[pickedStar].tint
+    }
+    stars[pickedStar].scale.set(scaleValue)*deltaTime
+  }
+}
 
 
 //*******************************************************************************************
@@ -140,7 +125,7 @@ function setupContainer(container) {
 }
 
 function onPointerClick(event) {
-  if (isConstellationRoating) {
+  if (isConstellationAnimationPlaying) {
     resetCanvas(event)
   }
 }
@@ -150,7 +135,7 @@ function resetCanvas(event) {
   stars = []
   starContainer.removeChildren()
   lineContainer.removeChildren()
-  isConstellationRoating = false
+  isConstellationAnimationPlaying = false
   isConstellationDrawn = false
   starContainer.rotation = 0
   lineContainer.rotation = 0
@@ -166,30 +151,30 @@ function resetCanvas(event) {
 
 function onPointerMove(event) {
   if (stars.length <= constellationStarCount && !isConstellationDrawn) {
-  mouseTrack += 1
+    mouseTrack += 1
+
+    if (stars.length === constellationStarCount) {
+      connectStars()
+
+      const rndColor = colors[randomRange(0, colors.length - 1)]
+      tintChilds(starContainer, rndColor)
+      tintChilds(lineContainer, rndColor)
+
+      isConstellationDrawn = true
+      constellationNameText.visible = true
+      constellationNameText.pivot.x = constellationNameText.width / 2
+      constellationNameText.pivot.y = constellationNameText.height / 2
+      constellationNameText.x = app.screen.width/2
+      constellationNameText.y = app.screen.height - 50
+      setTimeout(() => isConstellationAnimationPlaying = true, 1000)
+    }
+
   if (mouseTrack > mousetrackToNextStar) {
 
     if (isMousePosDifferent("x", event, MIN_AXIS_DIFFERENCE) &&
       isMousePosDifferent("y", event, MIN_AXIS_DIFFERENCE)) {
         oldMousePos.x = event.x
         oldMousePos.y = event.y
-
-          if (stars.length === constellationStarCount) {
-            connectStars()
-
-            const rndColor = colors[randomRange(0, colors.length - 1)]
-            tintChilds(starContainer, rndColor)
-            tintChilds(lineContainer, rndColor)
-
-            //stars = []
-            isConstellationDrawn = true
-            constellationNameText.visible = true
-            constellationNameText.pivot.x = constellationNameText.width / 2
-            constellationNameText.pivot.y = constellationNameText.height / 2
-            constellationNameText.x = app.screen.width/2
-            constellationNameText.y = app.screen.height - 50
-            setTimeout(() => isConstellationRoating = true, 1000)
-          }
 
         if (!isConstellationDrawn) {
           createStarPosition(event)
