@@ -12,8 +12,8 @@
   "author": " Till Gilsbach",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.14.0",
-    "@babel/preset-env": "^7.14.0",
+    "@babel/core": "^7.14.3",
+    "@babel/preset-env": "^7.14.2",
     "babel-loader": "^8.2.2",
     "copy-webpack-plugin": "^7.0.0",
     "html-loader": "^0.5.5",
