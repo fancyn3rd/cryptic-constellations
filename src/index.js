@@ -2,7 +2,6 @@ import * as PIXI from "pixi.js"
 import { arabToRoman } from "roman-numbers"
 import "regenerator-runtime"
 
-
 import nouns from "./words/nouns.json"
 import animals from "./words/animals.json"
 
@@ -35,26 +34,12 @@ let scaleValue = 1
 let isStarGrowing = false
 let pickedStar = null
 
-const starContainer = new PIXI.Container()
-const lineContainer = new PIXI.Container()
-const backgroundContainer = new PIXI.Container()
+const starContainer = setupContainer(new PIXI.Container())
+const lineContainer = setupContainer(new PIXI.Container())
+const backgroundContainer = setupContainer(new PIXI.Container())
 
-setupContainer(starContainer)
-setupContainer(lineContainer)
-setupContainer(backgroundContainer)
-
-const introText = new PIXI.Text(`Use ${USER_INPUT_DEVICE} to f1nd a const3llation`, introTextStyle);
-introText.pivot.x = introText.width / 2
-introText.pivot.y = introText.height / 2
-introText.x = app.screen.width/2
-introText.y = app.screen.height/2 - 20
-
-const constellationNameText = new PIXI.Text(
-  firstLetterUpperCase(nouns[randomRange(0, nouns.length - 1)]) + " "
-  + firstLetterUpperCase(animals[randomRange(0, animals.length - 1)]) + " "
-  + "X", nameTextStyle
-)
-constellationNameText.visible = false
+const introText = setupIntroText(new PIXI.Text())
+const constellationNameText = setupConstellationNameText(new PIXI.Text())
 
 document.body.appendChild(app.view);
 app.stage.addChild(backgroundContainer)
@@ -123,6 +108,28 @@ function setupContainer(container) {
   container.y = app.screen.height / 2;
   container.pivot.x = app.screen.width / 2
   container.pivot.y = app.screen.height / 2
+  return container
+}
+
+function setupIntroText(text) {
+  text.text = `Use ${USER_INPUT_DEVICE} to f1nd a const3llation`
+  text.style = introTextStyle
+  text.pivot.x = text.width / 2
+  text.pivot.y = text.height / 2
+  text.x = app.screen.width/2
+  text.y = app.screen.height/2 - 20
+  return text
+}
+
+function setupConstellationNameText(text) {
+  text.text =
+    firstLetterUpperCase(nouns[randomRange(0, nouns.length - 1)]) + " "
+    + firstLetterUpperCase(animals[randomRange(0, animals.length - 1)]) + " "
+    + "X", nameTextStyle
+
+  text.style = nameTextStyle
+  text.visible = false
+  return text
 }
 
 function onPointerClick(event) {
