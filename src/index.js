@@ -62,45 +62,6 @@ app.ticker.add((deltaTime) => {
   }
 });
 
-function colorizeBackgroundStars() {
-    rndColor = colors[randomRange(0, colors.length - 1)]
-    tintChilds(backgroundContainer, rndColor)
-}
-
-function doStarScalingAnimation(deltaTime) {
-
-  if (!isStarGrowing) {
-    switch (true) {
-      case (scaleValue <= 1):
-        pickedStar = randomRange(0, stars.length - 1)
-        isStarGrowing = true
-        break
-      case (scaleValue > 1):
-        scaleValue -= 0.03
-        break
-    }
-  }
-
-  if (isStarGrowing) {
-    switch (true) {
-      case (scaleValue < 4):
-        scaleValue += 0.03
-        break
-      case (scaleValue >= 4):
-        isStarGrowing = false
-        break
-    }
-  }
-
-  if (pickedStar) {
-    if (!stars[pickedStar].initialColor) {
-      stars[pickedStar].initialColor = stars[pickedStar].tint
-    }
-    stars[pickedStar].scale.set(scaleValue)*deltaTime
-  }
-}
-
-
 //*******************************************************************************************
 
 function setupContainer(container) {
@@ -122,12 +83,9 @@ function setupIntroText(text) {
 }
 
 function setupConstellationNameText(text) {
-  text.text =
-    firstLetterUpperCase(nouns[randomRange(0, nouns.length - 1)]) + " "
-    + firstLetterUpperCase(animals[randomRange(0, animals.length - 1)]) + " "
-    + "X", nameTextStyle
-
   text.style = nameTextStyle
+  text.x = app.screen.width/2
+  text.y = app.screen.height - 50
   text.visible = false
   return text
 }
@@ -150,11 +108,18 @@ function resetCanvas(event) {
   mouseTrack = 0
   storeMousePos(event)
   tintChilds(backgroundContainer, colors[0])
-  constellationNameText.visible = false
+  setConstellationName()
+}
+
+function setConstellationName() {
   constellationNameText.text =
     firstLetterUpperCase(nouns[randomRange(0, nouns.length - 1)]) + " "
     + firstLetterUpperCase(animals[randomRange(0, animals.length - 1)]) + " "
-    + arabToRoman(randomRange(0,20)), nameTextStyle
+    + arabToRoman(randomRange(0,20))
+
+  constellationNameText.visible = false;
+  constellationNameText.pivot.x = constellationNameText.width / 2
+  constellationNameText.pivot.y = constellationNameText.height / 2
 }
 
 function onPointerMove(event) {
@@ -170,10 +135,6 @@ function onPointerMove(event) {
 
       isConstellationDrawn = true
       constellationNameText.visible = true
-      constellationNameText.pivot.x = constellationNameText.width / 2
-      constellationNameText.pivot.y = constellationNameText.height / 2
-      constellationNameText.x = app.screen.width/2
-      constellationNameText.y = app.screen.height - 50
       setTimeout(() => isConstellationAnimationPlaying = true, 1000)
     }
 
@@ -293,5 +254,44 @@ function randomRange(min, max) {
   return Math.ceil(Math.random() * (max - min) + min)
 }
 
+
+//LOOP/TICKER Functions
+//*******************************************************************************************
+function colorizeBackgroundStars() {
+  rndColor = colors[randomRange(0, colors.length - 1)]
+  tintChilds(backgroundContainer, rndColor)
+}
+
+function doStarScalingAnimation(deltaTime) {
+  if (!isStarGrowing) {
+    switch (true) {
+      case (scaleValue <= 1):
+        pickedStar = randomRange(0, stars.length - 1)
+        isStarGrowing = true
+        break
+      case (scaleValue > 1):
+        scaleValue -= 0.03
+        break
+    }
+  }
+
+  if (isStarGrowing) {
+    switch (true) {
+      case (scaleValue < 4):
+        scaleValue += 0.03
+        break
+      case (scaleValue >= 4):
+        isStarGrowing = false
+        break
+    }
+  }
+
+  if (pickedStar) {
+    if (!stars[pickedStar].initialColor) {
+      stars[pickedStar].initialColor = stars[pickedStar].tint
+    }
+    stars[pickedStar].scale.set(scaleValue)*deltaTime
+  }
+}
 
 
