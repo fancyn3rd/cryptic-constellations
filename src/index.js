@@ -136,21 +136,20 @@ function onPointerMove(event) {
       setTimeout(() => isConstellationAnimationPlaying = true, 1000)
     }
 
-  if (mouseTrack > mousetrackToNextStar) {
+    if (mouseTrack > mousetrackToNextStar) {
+      if (isMousePosDifferent("x", event, MIN_AXIS_DIFFERENCE) &&
+        isMousePosDifferent("y", event, MIN_AXIS_DIFFERENCE)) {
+          oldMousePos.x = event.x
+          oldMousePos.y = event.y
 
-    if (isMousePosDifferent("x", event, MIN_AXIS_DIFFERENCE) &&
-      isMousePosDifferent("y", event, MIN_AXIS_DIFFERENCE)) {
-        oldMousePos.x = event.x
-        oldMousePos.y = event.y
-
-        if (!isConstellationDrawn) {
-          createStarPosition(event)
-          setMouseTrackToNextStar()
-          mouseTrack = 0
+          if (!isConstellationDrawn) {
+            createStarPosition(event)
+            setMouseTrackToNextStar()
+            mouseTrack = 0
+          }
         }
-      }
+    }
   }
-}
 }
 
 function createStarPosition(event) {
