@@ -4,7 +4,6 @@ export const MIN_STARS = 4
 export const MIN_MOUSETRACK = 5
 export const MAX_MOUSETRACK = 8
 export const MIN_AXIS_DIFFERENCE = 30
-export const ROTATION_SPEED = 0.005
 
 const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 export const USER_INPUT_DEVICE = IS_MOBILE ? "f1nger" : "m0use"

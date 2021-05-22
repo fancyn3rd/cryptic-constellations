@@ -42,14 +42,14 @@ const introText = setupIntroText(new PIXI.Text())
 const constellationNameText = setupConstellationNameText(new PIXI.Text())
 
 document.body.appendChild(app.view);
+document.body.addEventListener("pointermove", (event) => onPointerMove(event))
+document.body.addEventListener("pointerdown", (event) => onPointerClick(event))
+
 app.stage.addChild(backgroundContainer)
 app.stage.addChild(lineContainer);
 app.stage.addChild(starContainer);
 app.stage.addChild(introText);
 app.stage.addChild(constellationNameText);
-
-document.body.addEventListener("pointermove", (event) => onPointerMove(event))
-document.body.addEventListener("pointerdown", (event) => onPointerClick(event))
 
 drawBackgroundStars()
 setMouseTrackToNextStar()
@@ -97,14 +97,12 @@ function onPointerClick(event) {
 }
 
 function resetCanvas(event) {
-  introText.visible = false
   stars = []
   starContainer.removeChildren()
   lineContainer.removeChildren()
+  introText.visible = false;
   isConstellationAnimationPlaying = false
   isConstellationDrawn = false
-  starContainer.rotation = 0
-  lineContainer.rotation = 0
   mouseTrack = 0
   storeMousePos(event)
   tintChilds(backgroundContainer, colors[0])
