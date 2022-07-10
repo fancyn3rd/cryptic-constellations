@@ -4,6 +4,7 @@ const path = require("path")
 
 module.exports = (env) => ({
   devtool: env.development ? "eval-source-map" : "none",
+  mode: env.development ? "development" : "prouduction",
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "./bundle.js"
@@ -24,12 +25,14 @@ module.exports = (env) => ({
       ],
   },
   devServer: {
-    publicPath:"/",
-    contentBase: path.resolve(__dirname, "./")
+    static: path.resolve(__dirname, "./")
   },
-  node: {
-    fs: "empty"
- },
+  resolve: {
+    fallback: { 
+      "url": require.resolve("url/"),
+      process: "process/browser"
+    }
+  },
   plugins: [
     new HtmlWebPackPlugin({
       template: "./index.html",
