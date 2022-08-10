@@ -1,5 +1,6 @@
 
 const HtmlWebPackPlugin = require("html-webpack-plugin");
+const webpack = require('webpack')
 const path = require("path")
 
 module.exports = (env) => ({
@@ -29,14 +30,16 @@ module.exports = (env) => ({
   },
   resolve: {
     fallback: { 
-      "url": require.resolve("url/"),
-      process: "process/browser"
+      "url": require.resolve("url/")
     }
   },
   plugins: [
     new HtmlWebPackPlugin({
       template: "./index.html",
       filename: "./index.html"
+    }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser'
     })
   ]
 })
